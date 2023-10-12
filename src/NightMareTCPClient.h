@@ -58,6 +58,7 @@ private:
     // Comunication protocol used, check available TransmissionModes;
     void newMessage(String message);
   TransmissionMode transmissionMode;
+  uint32_t _lastMessageRecived;
 public:
   /// @brief NightMare TCP Client Object.
   /// @param debug print out debug info?

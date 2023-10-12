@@ -113,8 +113,16 @@ void NightMareTCPClient::handleClient()
         send(KEEP_ALIVE_MESSAGE);
     }
 
+    if (millis() - _lastMessageRecived > _keepAliveInterval * 2 && _keepAlive && client->connected() )
+    {
+        log_f(_debug, "***No response from server, disconnected***\n");
+        tcpClient.client->stop();
+    }
+    
+
     if (client->available() > 0)
     {
+        _lastMessageRecived = millis();
         String msg = "";
         int size = 0;
         int index = 0;
@@ -208,6 +216,7 @@ void NightMareTCPClient::setFastChar(char newFastChar)
 
 bool NightMareTCPClient::connect(String ip, int port)
 {
+    _lastMessageRecived = millis();
     _ip = ip;
     _port = port;
     return client->connect(_ip.c_str(), _port);
@@ -215,6 +224,7 @@ bool NightMareTCPClient::connect(String ip, int port)
 
 bool NightMareTCPClient::connect(IPAddress ip, int port)
 {
+    _lastMessageRecived = millis();
     _ip = ip.toString();
     _port = port;
    return client->connect(ip, _port);
