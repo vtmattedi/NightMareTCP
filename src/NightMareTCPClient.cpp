@@ -116,7 +116,7 @@ void NightMareTCPClient::handleClient()
     if (millis() - _lastMessageRecived > _keepAliveInterval * 2 && _keepAlive && client->connected() )
     {
         log_f(_debug, "***No response from server, disconnected***\n");
-        tcpClient.client->stop();
+        client->stop();
     }
     
 
