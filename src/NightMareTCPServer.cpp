@@ -6,7 +6,7 @@ String NightMareTCPServer::NightMareCommands_Server(String msg, byte index)
   if (msg == "Help" || msg == "help" || msg == "H" || msg == "h")
   {
     response += ("Welcome to NightMare Home Systems ©\nThis is a ESP32 Module and it can answer to the following commands:\n");
-    response += ("Quick obs.: the character int [19] or char () is ignored when recieved for facilitating reasons.");
+    response += ("Quick obs.: the character int [19] or char () is ignored when received for facilitating reasons.");
     response += ("'A' > Gets the current state of available variables\n'L' > Toggles the LIGH_RELAY state\n");
     response += ("'T;******;' > Sets the TIMEOUT value for the tcp server.[Replace '******' with a long.\n");
     response += ("'SOFTWARE_RESET' requests a software reset.");
@@ -111,7 +111,7 @@ void NightMareTCPServer::handleServer()
   WiFiClient newClient = _wifiServer.available();
   if (newClient)
   {
-    log_f(_debug,"new client connected \n");
+    log_f(_debug, "new client connected \n");
     // Find the first unused space
     for (int i = 0; i < MAX_CLIENTS; ++i)
     {
@@ -139,6 +139,7 @@ void NightMareTCPServer::handleServer()
     // If the client is in use, and has some data...
     if (NULL != clients[i].client && clients[i].client->available())
     {
+      Serial.printf("New Msg from [%s] mode [%d]\n", clients[i].client->remoteIP().toString().c_str(), clients[i].transmissionMode);
       String msg = "";
       clients[i].clientsTimeout = millis();
       int size = 0;
@@ -183,9 +184,15 @@ void NightMareTCPServer::handleServer()
           }
           else
           {
+
             index++;
-            msg += newChar;
+            if (newChar != (char)13)
+            {
+              msg += newChar;
+            }
           }
+
+          Serial.printf("%c: %d : %s\n", newChar, newChar, msg.c_str());
         }
       }
 
