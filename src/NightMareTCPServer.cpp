@@ -186,7 +186,7 @@ void NightMareTCPServer::handleServer()
           {
 
             index++;
-            if (newChar != (char)13)
+            if (newChar >= 32 && newChar <= 126)
             {
               msg += newChar;
             }
