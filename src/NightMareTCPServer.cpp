@@ -139,7 +139,7 @@ void NightMareTCPServer::handleServer()
     // If the client is in use, and has some data...
     if (NULL != clients[i].client && clients[i].client->available())
     {
-      Serial.printf("New Msg from [%s] mode [%d]\n", clients[i].client->remoteIP().toString().c_str(), clients[i].transmissionMode);
+      log_f("New Msg from [%s] mode [%d]\n", clients[i].client->remoteIP().toString().c_str(), clients[i].transmissionMode);
       String msg = "";
       clients[i].clientsTimeout = millis();
       int size = 0;
@@ -184,15 +184,14 @@ void NightMareTCPServer::handleServer()
           }
           else
           {
-
             index++;
-            if (newChar >= 32 && newChar <= 126)
+            //Check if the char is a printable char or extended ascii
+            if (newChar >= 32 && newChar <= 126 || newChar >= 128 && newChar <= 255)
             {
               msg += newChar;
             }
           }
-
-          Serial.printf("%c: %d : %s\n", newChar, newChar, msg.c_str());
+          //log_f("%c (%d) -> %s\n", newChar, newChar, msg.c_str());
         }
       }
 
